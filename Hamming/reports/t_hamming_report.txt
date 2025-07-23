@@ -1,6 +1,7 @@
 ===== HAMMING TRANSMITTER REPORT =====
 
 Configuración:
+- Protocolo de data: (11,7)
 - Paridad usada: par
 - Paridad extendida: no
 - Bits de datos: 7

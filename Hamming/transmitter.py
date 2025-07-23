@@ -1,7 +1,7 @@
 import os
 import yaml
 class HammingTransmitter:
-    def __init__(self, msg, config_path="./protocol.yaml", generate_report=True, output_path="./reports/hamming_report.txt", detail_path="./reports/hamming_detail.txt"):
+    def __init__(self, msg, config_path="./protocol.yaml", generate_report=True, output_path="./reports/t_hamming_report.txt", detail_path="./reports/t_hamming_detail.txt"):
         self.msg = msg
         self.msg_bits = []
         self.data_bits = len(msg)
@@ -122,6 +122,7 @@ class HammingTransmitter:
             f.write("===== HAMMING TRANSMITTER REPORT =====\n\n")
 
             f.write("Configuración:\n")
+            f.write(f"- Protocolo de data: ({self.quantity_bits},{self.data_bits})\n")
             f.write(f"- Paridad usada: {'par' if self.is_even_parity else 'impar'}\n")
             f.write(f"- Paridad extendida: {'sí' if self.extended else 'no'}\n")
             f.write(f"- Bits de datos: {self.data_bits}\n")
@@ -162,9 +163,9 @@ class HammingTransmitter:
             f.write("\n===== FIN DEL DETALLE =====\n")
 
 def menu():
-    report_path="./reports/hamming_report.txt"
+    report_path="./reports/t_hamming_report.txt"
     config_path="./protocol.yaml"
-    detail_path="./reports/hamming_detail.txt"
+    detail_path="./reports/t_hamming_detail.txt"
 
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
@@ -203,7 +204,9 @@ def menu():
 
     # Mostrar mensaje final codificado y resumen
     mensaje_codificado = ''.join(str(bit) for bit, _ in transmitter.msg_bits)
-    print("Codificación final del mensaje:", mensaje_codificado,"\n")
+    print(f"Codificación final del mensaje: {mensaje_codificado}","\n")
+    print(f"Protocolo de data:({transmitter.quantity_bits},{transmitter.data_bits})", "\n")
+    
     print(f"\tReporte generado en: '{os.path.abspath(report_path)}'")
     print(f"\tDetalle de los pasos seguidos, generado en: '{os.path.abspath(detail_path)}'")
 

@@ -204,8 +204,8 @@ def menu():
 
     # Mostrar mensaje final codificado y resumen
     mensaje_codificado = ''.join(str(bit) for bit, _ in transmitter.msg_bits)
-    print(f"Codificación final del mensaje: {mensaje_codificado}","\n")
-    print(f"Protocolo de data:({transmitter.quantity_bits},{transmitter.data_bits})", "\n")
+    print(f"Codificación final del mensaje: {mensaje_codificado}")
+    print(f"Protocolo de data: ({transmitter.quantity_bits},{transmitter.data_bits})", "\n")
     
     print(f"\tReporte generado en: '{os.path.abspath(report_path)}'")
     print(f"\tDetalle de los pasos seguidos, generado en: '{os.path.abspath(detail_path)}'")

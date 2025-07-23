@@ -1,0 +1,21 @@
+===== DETALLE DE LA CODIFICACIÓN HAMMING =====
+
+Construcción del mensaje codificado:
+- Posición 1: reservado para bit de paridad Hamming (r)
+- Posición 2: reservado para bit de paridad Hamming (r)
+- Posición 3: bit de datos '0' asignado desde msg[0]
+- Posición 4: reservado para bit de paridad Hamming (r)
+- Posición 5: bit de datos '1' asignado desde msg[1]
+- Posición 6: bit de datos '0' asignado desde msg[2]
+- Posición 7: bit de datos '0' asignado desde msg[3]
+- Posición 8: reservado para bit de paridad Hamming (r)
+- Posición 9: bit de datos '1' asignado desde msg[4]
+- Posición 10: bit de datos '0' asignado desde msg[5]
+- Posición 11: bit de datos '1' asignado desde msg[6]
+
+r1 cubre posiciones [1, 3, 5, 7, 9, 11] -> valores: [1=None, 3=0, 5=1, 7=0, 9=1, 11=1]. Total de 1s: 3. Paridad par usada -> bit de paridad: 1
+r2 cubre posiciones [2, 3, 6, 7, 10, 11] -> valores: [2=None, 3=0, 6=0, 7=0, 10=0, 11=1]. Total de 1s: 1. Paridad par usada -> bit de paridad: 1
+r4 cubre posiciones [4, 5, 6, 7] -> valores: [4=None, 5=1, 6=0, 7=0]. Total de 1s: 1. Paridad par usada -> bit de paridad: 1
+r8 cubre posiciones [8, 9, 10, 11] -> valores: [8=None, 9=1, 10=0, 11=1]. Total de 1s: 2. Paridad par usada -> bit de paridad: 0
+
+===== FIN DEL DETALLE =====

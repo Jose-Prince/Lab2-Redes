@@ -1,7 +1,7 @@
 import os
 import yaml
 class HammingTransmitter:
-    def __init__(self, msg, config_path="./protocol.yaml", generate_report=True, output_path="./hamming_report.txt"):
+    def __init__(self, msg, config_path="./protocol.yaml", generate_report=True, output_path="./reports/hamming_report.txt", detail_path="./reports/hamming_detail.txt"):
         self.msg = msg
         self.msg_bits = []
         self.data_bits = len(msg)
@@ -9,6 +9,11 @@ class HammingTransmitter:
         self.pos_redundancy_bits = []
         self.value_redundancy_bits = {}
         self.type_bit = ["d", "r", "rg"]  # d: data, r: hamming redundancy, rg: global redundancy
+        
+        # Otros
+        self.detail_lines = []
+        self.output_path = output_path
+        self.detail_path = detail_path
 
         # Leer configuración del archivo YAML
         config = self.loadConfig(config_path)
@@ -25,7 +30,8 @@ class HammingTransmitter:
         self.setAllParityBits()
         
         if generate_report:
-            self.exportToTxt(filename=output_path)
+            self.exportToTxt(filename=self.output_path)
+            self.exportDetailTxt(detail_path=self.detail_path)
         
     def loadConfig(self, path):
         with open(path, 'r') as file:
@@ -53,29 +59,52 @@ class HammingTransmitter:
         j = 0
         self.msg_bits = []
 
+        self.detail_lines.append("Construcción del mensaje codificado:")
+        
         for i in range(1, self.quantity_bits + 1):
             if self.extended and i == self.quantity_bits:
                 self.msg_bits.append((None, self.type_bit[2]))  # bit de paridad global (al final)
+                self.detail_lines.append(f"- Posición {i}: reservado para bit de paridad global (rg)")
             elif i in self.pos_redundancy_bits:
                 self.msg_bits.append((None, self.type_bit[1]))  # bit de paridad hamming
+                self.detail_lines.append(f"- Posición {i}: reservado para bit de paridad Hamming (r)")
             else:
-                self.msg_bits.append((int(self.msg[j]), self.type_bit[0]))
+                bit = int(self.msg[j])
+                self.msg_bits.append((bit, self.type_bit[0]))  # bit de datos
+                self.detail_lines.append(f"- Posición {i}: bit de datos '{bit}' asignado desde msg[{j}]")
                 j += 1
+
+        self.detail_lines.append("")  # Espacio visual
 
     def calculateParity(self, position):
         values = self.value_redundancy_bits[position]
-        count_ones = sum(
-            1 for i in values
-            if (bit := self.msg_bits[i - 1][0]) is not None and bit == 1
+        bits_in_positions = [(i, self.msg_bits[i - 1][0]) for i in values]
+        count_ones = sum(1 for _, bit in bits_in_positions if bit == 1)
+        parity = count_ones % 2 if self.is_even_parity else (count_ones + 1) % 2
+
+        bit_values_str = ", ".join(f"{i}={bit}" for i, bit in bits_in_positions)
+
+        self.detail_lines.append(
+            f"r{position} cubre posiciones {values} -> valores: [{bit_values_str}]. "
+            f"Total de 1s: {count_ones}. Paridad {'par' if self.is_even_parity else 'impar'} usada -> bit de paridad: {parity}"
         )
-        return count_ones % 2 if self.is_even_parity else (count_ones + 1) % 2
+
+        return parity
 
     def calculateParityExtend(self):
-        count_ones = sum(
-            1 for i in range(self.quantity_bits - 1)  # excluye el último bit (extendido)
-            if (bit := self.msg_bits[i][0]) is not None and bit == 1
+        bits_in_positions = [(i + 1, self.msg_bits[i][0]) for i in range(self.quantity_bits - 1)]
+        count_ones = sum(1 for _, bit in bits_in_positions if bit == 1)
+        parity = count_ones % 2 if self.is_even_parity else (count_ones + 1) % 2
+
+        bit_values_str = ", ".join(f"{i}={bit}" for i, bit in bits_in_positions)
+
+        self.detail_lines.append(
+            f"Paridad extendida cubre todas las posiciones excepto la final -> valores: [{bit_values_str}]. "
+            f"Total de 1s: {count_ones}. Paridad {'par' if self.is_even_parity else 'impar'} usada -> bit global: {parity}"
         )
-        return count_ones % 2 if self.is_even_parity else (count_ones + 1) % 2
+
+        return parity
+
 
     def setAllParityBits(self):
         # 1. Calcular paridades Hamming
@@ -125,9 +154,17 @@ class HammingTransmitter:
 
             f.write("\n===== FIN DEL REPORTE =====\n")
 
+    def exportDetailTxt(self, detail_path):
+        with open(detail_path, "w", encoding="utf-8") as f:
+            f.write("===== DETALLE DE LA CODIFICACIÓN HAMMING =====\n\n")
+            for line in self.detail_lines:
+                f.write(line + "\n")
+            f.write("\n===== FIN DEL DETALLE =====\n")
+
 def menu():
     report_path="./reports/hamming_report.txt"
     config_path="./protocol.yaml"
+    detail_path="./reports/hamming_detail.txt"
 
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
@@ -160,13 +197,15 @@ def menu():
         msg=msg,
         config_path=config_path,
         generate_report=True,
-        output_path=report_path
+        output_path=report_path,
+        detail_path=detail_path
     )
 
     # Mostrar mensaje final codificado y resumen
     mensaje_codificado = ''.join(str(bit) for bit, _ in transmitter.msg_bits)
-    print("Codificación final del mensaje:", mensaje_codificado)
-    print(f"Reporte generado en: '{os.path.abspath(report_path)}'")
+    print("Codificación final del mensaje:", mensaje_codificado,"\n")
+    print(f"\tReporte generado en: '{os.path.abspath(report_path)}'")
+    print(f"\tDetalle de los pasos seguidos, generado en: '{os.path.abspath(detail_path)}'")
 
 if __name__ == "__main__":
   menu()

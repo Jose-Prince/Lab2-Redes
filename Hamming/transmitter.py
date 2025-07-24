@@ -17,9 +17,9 @@ class HammingTransmitter:
 
         # Leer configuración del archivo YAML
         config = self.loadConfig(config_path)
-        self.extended = config.get("extended", True)
+        self.is_extended = config.get("extended", True)
         self.is_even_parity = config.get("parity", "even") == "even"
-        self.global_redundancy_bits = 1 if self.extended else 0
+        self.global_redundancy_bits = 1 if self.is_extended else 0
         
         self.calculateParityBits()
         self.quantity_bits = self.data_bits + self.parity_bits + self.global_redundancy_bits
@@ -28,6 +28,7 @@ class HammingTransmitter:
         self.calculateParityBitsValues()
         self.createMsg()
         self.setAllParityBits()
+        self.msg_output = self.getMsgOutput()
         
         if generate_report:
             self.exportToTxt(filename=self.output_path)
@@ -43,7 +44,7 @@ class HammingTransmitter:
 
     def positionRedundancyBits(self):
         position_temp = 0
-        max_position = self.quantity_bits - 1 if self.extended else self.quantity_bits
+        max_position = self.quantity_bits - 1 if self.is_extended else self.quantity_bits
         while (2 ** position_temp <= max_position):
             self.pos_redundancy_bits.append(2 ** position_temp)
             position_temp += 1
@@ -52,7 +53,7 @@ class HammingTransmitter:
         for r in self.pos_redundancy_bits:
             self.value_redundancy_bits[r] = []
             for i in range(1, self.quantity_bits + 1):
-                if i & r != 0 and (not self.extended or i != self.quantity_bits):
+                if i & r != 0 and (not self.is_extended or i != self.quantity_bits):
                     self.value_redundancy_bits[r].append(i)
 
     def createMsg(self):
@@ -62,7 +63,7 @@ class HammingTransmitter:
         self.detail_lines.append("Construcción del mensaje codificado:")
         
         for i in range(1, self.quantity_bits + 1):
-            if self.extended and i == self.quantity_bits:
+            if self.is_extended and i == self.quantity_bits:
                 self.msg_bits.append((None, self.type_bit[2]))  # bit de paridad global (al final)
                 self.detail_lines.append(f"- Posición {i}: reservado para bit de paridad global (rg)")
             elif i in self.pos_redundancy_bits:
@@ -113,9 +114,12 @@ class HammingTransmitter:
             self.msg_bits[position - 1] = (parity, self.type_bit[1])
 
         # 2. Calcular paridad extendida si está activada
-        if self.extended:
+        if self.is_extended:
             parity_extend = self.calculateParityExtend()
             self.msg_bits[-1] = (parity_extend, self.type_bit[2])
+
+    def getMsgOutput(self):
+        return ''.join(str(bit) for bit, _ in self.msg_bits)
 
     def exportToTxt(self, filename):
         with open(filename, "w", encoding="utf-8") as f:
@@ -124,14 +128,14 @@ class HammingTransmitter:
             f.write("Configuración:\n")
             f.write(f"- Protocolo de data: ({self.quantity_bits},{self.data_bits})\n")
             f.write(f"- Paridad usada: {'par' if self.is_even_parity else 'impar'}\n")
-            f.write(f"- Paridad extendida: {'sí' if self.extended else 'no'}\n")
+            f.write(f"- Paridad extendida: {'sí' if self.is_extended else 'no'}\n")
             f.write(f"- Bits de datos: {self.data_bits}\n")
             f.write(f"- Bits de paridad Hamming: {self.parity_bits}\n")
-            if self.extended:
+            if self.is_extended:
                 f.write(f"- Bits de redundancia global (extendido): {self.global_redundancy_bits}\n")
             f.write(f"- Bits totales (codificados): {self.quantity_bits}\n")
             f.write(f"- Posiciones de paridad Hamming: {self.pos_redundancy_bits}\n")
-            if self.extended:
+            if self.is_extended:
                 f.write(f"- Posición de bit de paridad global (extendido): {self.quantity_bits}\n")
             f.write("\n")
 
@@ -203,8 +207,7 @@ def menu():
     )
 
     # Mostrar mensaje final codificado y resumen
-    mensaje_codificado = ''.join(str(bit) for bit, _ in transmitter.msg_bits)
-    print(f"Codificación final del mensaje: {mensaje_codificado}")
+    print(f"Codificación final del mensaje: {transmitter.msg_output}")
     print(f"Protocolo de data: ({transmitter.quantity_bits},{transmitter.data_bits})", "\n")
     
     print(f"\tReporte generado en: '{os.path.abspath(report_path)}'")

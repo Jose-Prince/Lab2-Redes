@@ -1,0 +1,53 @@
+===== HAMMING TRANSMITTER REPORT =====
+
+Configuración:
+- Protocolo de data: (11,7)
+- Paridad usada: par
+- Paridad extendida: no
+- Bits de datos: 7
+- Bits de redundancia Hamming: 4
+- Bits totales (recibidos): 11
+- Posiciones de redundancia Hamming: [1, 2, 4, 8]
+
+=== Información RECIBIDA ===
+Mensaje recibido (bits de datos):
+11011010101
+
+Bits recibidos (posiciones y tipos):
+Posición 1: Tipo = r
+Posición 1: Tipo = r
+Posición 0: Tipo = d
+Posición 1: Tipo = r
+Posición 1: Tipo = d
+Posición 0: Tipo = d
+Posición 1: Tipo = d
+Posición 0: Tipo = r
+Posición 1: Tipo = d
+Posición 0: Tipo = d
+Posición 1: Tipo = d
+
+=== Información CALCULADA ===
+Mensaje codificado (msgBitsCalculated):
+Posición	Bit	Tipo
+1		0	r
+2		0	r
+3		0	d
+4		0	r
+5		1	d
+6		0	d
+7		1	d
+8		0	r
+9		1	d
+10		0	d
+11		1	d
+
+Cobertura de cada bit de paridad Hamming:
+r1 (pos 1) -> cubre: [1, 3, 5, 7, 9, 11]
+r2 (pos 2) -> cubre: [2, 3, 6, 7, 10, 11]
+r4 (pos 4) -> cubre: [4, 5, 6, 7]
+r8 (pos 8) -> cubre: [8, 9, 10, 11]
+
+Mensaje binario final (para transmisión):
+RETRANSMITIR
+
+===== FIN DEL REPORTE =====

@@ -139,7 +139,7 @@ Entrada: 0100101
 
 ```bash
 1. Mensaje recibido por emisor: 110110001010
-2. Entrada (mensaje con el tercer bit con error): 110110101010
+2. Entrada (mensaje con el séptimo bit con error): 110110101010
 2. Bits totales (n): 12
 3. Bits de datos (m): 7
 ```
@@ -156,7 +156,7 @@ Entrada: 00110
 
 ```bash
 1. Mensaje recibido por emisor: 1000011001
-2. Entrada (mensaje con el tercer bit con error): 1001011001
+2. Entrada (mensaje con el cuarto bit con error): 1001011001
 3. Bits totales (n): 10
 4. Bits de datos (m): 5
 ```
@@ -173,7 +173,7 @@ Entrada: 1110
 
 ```bash
 1. Mensaje recibido por emisor: 00101101
-2. Entrada (mensaje con el tercer bit con error): 01101101
+2. Entrada (mensaje con el segundo bit con error): 01101101
 3. Bits totales (n): 8
 4. Bits de datos (m): 4
 ```
@@ -192,7 +192,7 @@ Entrada: 0100101
 
 ```bash
 1. Mensaje recibido por emisor: 110110001010
-2. Entrada (mensaje con el tercer bit con error): 110111101010
+2. Entrada (mensaje con el 3 y 4 bit con error): 110111101010
 2. Bits totales (n): 12
 3. Bits de datos (m): 7
 ```
@@ -209,7 +209,7 @@ Entrada: 00110
 
 ```bash
 1. Mensaje recibido por emisor: 1000011001
-2. Entrada (mensaje con el tercer bit con error): 0101111001
+2. Entrada (mensaje con el 1,2,4 y 5 bit con error): 0101111001
 3. Bits totales (n): 10
 4. Bits de datos (m): 5
 ```
@@ -226,7 +226,7 @@ Entrada: 1110
 
 ```bash
 1. Mensaje recibido por emisor: 00101101
-2. Entrada (mensaje con el tercer bit con error): 10111110
+2. Entrada (mensaje con el 1, 4, 7 y 8 bit con error): 10111110
 3. Bits totales (n): 8
 4. Bits de datos (m): 4
 ```

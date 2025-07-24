@@ -88,9 +88,9 @@ Entrada: 1011001
 **Receptor:**
 
 ```bash
-1. Entrada (mensaje recibido): 011100101010
-2. Bits de datos (k): 7
-3. Bits totales (n): 12
+1. Entrada (mensaje recibido): 101001110010
+2. Bits totales (n): 12
+3. Bits de datos (m): 7
 ```
 
 #### **Prueba 2**
@@ -104,9 +104,9 @@ Entrada: 00110
 **Receptor:**
 
 ```bash
-1. Entrada (mensaje recibido): 001101011
-2. Bits de datos (k): 5
-3. Bits totales (n): 9
+1. Entrada (mensaje recibido): 1000011001
+2. Bits totales (n): 10
+3. Bits de datos (m): 5
 ```
 
 #### **Prueba 3**
@@ -120,7 +120,113 @@ Entrada: 1110
 **Receptor:**
 
 ```bash
-1. Entrada (mensaje recibido): 00111101
-2. Bits de datos (k): 4
+1. Entrada (mensaje recibido): 00101101
+2. Bits totales (n): 8
+3. Bits de datos (m): 4
+```
+
+### Caso 2 - Un error
+
+#### **Prueba 1**
+
+**Emisor:**
+
+```bash
+Entrada: 0100101
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 110110001010
+2. Entrada (mensaje con el tercer bit con error): 110110101010
+2. Bits totales (n): 12
+3. Bits de datos (m): 7
+```
+
+#### **Prueba 2**
+
+**Emisor:**
+
+```bash
+Entrada: 00110
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 1000011001
+2. Entrada (mensaje con el tercer bit con error): 1001011001
+3. Bits totales (n): 10
+4. Bits de datos (m): 5
+```
+
+#### **Prueba 3**
+
+**Emisor:**
+
+```bash
+Entrada: 1110
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 00101101
+2. Entrada (mensaje con el tercer bit con error): 01101101
 3. Bits totales (n): 8
+4. Bits de datos (m): 4
+```
+
+### Caso 3 - Dos + errores
+
+#### **Prueba 1**
+
+**Emisor:**
+
+```bash
+Entrada: 0100101
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 110110001010
+2. Entrada (mensaje con el tercer bit con error): 110111101010
+2. Bits totales (n): 12
+3. Bits de datos (m): 7
+```
+
+#### **Prueba 2**
+
+**Emisor:**
+
+```bash
+Entrada: 00110
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 1000011001
+2. Entrada (mensaje con el tercer bit con error): 0101111001
+3. Bits totales (n): 10
+4. Bits de datos (m): 5
+```
+
+#### **Prueba 3**
+
+**Emisor:**
+
+```bash
+Entrada: 1110
+```
+
+**Receptor:**
+
+```bash
+1. Mensaje recibido por emisor: 00101101
+2. Entrada (mensaje con el tercer bit con error): 10111110
+3. Bits totales (n): 8
+4. Bits de datos (m): 4
 ```

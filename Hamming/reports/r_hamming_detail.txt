@@ -12,6 +12,7 @@ Construcción del mensaje recibido:
 	- Posición 9: bit recibido '1' (dato, d)
 	- Posición 10: bit recibido '0' (dato, d)
 	- Posición 11: bit recibido '1' (dato, d)
+	- Posición 12: bit recibido '0' (paridad global, rg)
 
 Inicializando msgBitsCalculated:
 	- Bit de redundancia tipo 'r' inicializado en posición 1 con valor -1
@@ -25,6 +26,7 @@ Inicializando msgBitsCalculated:
 	- Bit de dato en posición 9 con valor 1 copiado
 	- Bit de dato en posición 10 con valor 0 copiado
 	- Bit de dato en posición 11 con valor 1 copiado
+	- Bit de redundancia tipo 'rg' inicializado en posición 12 con valor -1
 
 Calculando y asignando bits de redundancia:
 
@@ -36,6 +38,8 @@ r4 cubre posiciones [4, 5, 6, 7] -> valores: [4=-1, 5=1, 6=0, 7=1]. Total de 1s:
 	 - Bit de redundancia r4 asignado con valor 0
 r8 cubre posiciones [8, 9, 10, 11] -> valores: [8=-1, 9=1, 10=0, 11=1]. Total de 1s: 2. Paridad par usada -> bit de paridad: 0
 	 - Bit de redundancia r8 asignado con valor 0
+Paridad extendida cubre todas las posiciones excepto la final -> valores: [1=0, 2=0, 3=0, 4=0, 5=1, 6=0, 7=1, 8=0, 9=1, 10=0, 11=1]. Total de 1s: 4. Paridad par usada -> bit global: 0
+	 - Bit de redundancia extendida rg asignado con valor 0
 
 ===== DETECCIÓN DE ERRORES =====
 Comparación de bits de paridad recibidos vs calculados:
@@ -49,14 +53,21 @@ Bits de paridad (posRedundancyBits): [1, 2, 4, 8]
  - Posición 8: recibido = 0, calculado = 0
 -> Se detectaron errores de paridad.
  - Posición decimal del error estimado: 7
--> No hay bit de paridad extendida → No se puede confirmar si hay múltiples errores.
+
+Verificando bit de paridad extendida:
+ - Paridad extendida recibida: 0
+ - Paridad extendida calculada: 0
+-> Bit global coincide -> Se asume un único error, se puede corregir.
 ===== FIN DE DETECCIÓN DE ERRORES =====
 
 ===== PROCESO DE CONSTRUCCIÓN DEL MENSAJE FINAL =====
 
 -> Se detectó un error en el mensaje.
--> No se puede corregir el error. Se requiere retransmisión.
- - Resultado final: RETRANSMITIR
+-> Es un único error. Se intentará corregir.
+ - Posición del error: 7
+ - Bit antes de la corrección: 1
+ - Bit después de la corrección: 0
+ - Mensaje final (solo bits de datos): 0100101
 ===== FIN DEL PROCESO DE CONSTRUCCIÓN =====
 
 ===== FIN DEL DETALLE =====
